@@ -14,6 +14,15 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         model = Profile
         fields = ('name', 'email', 'address')
 
+    def create(self, validated_data):
+        adress = validated_data.pop('address')
+        user = User.objects.create_user(username=validated_data['name'].split()[0],
+                                        email=validated_data['email'],
+                                        password='senha')
+
+        address = Address.objects.create(**adress)
+        return Profile.objects.create(address=address, user=user, **validated_data)
+
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
     post = serializers.SlugRelatedField(queryset=Post.objects.all(), slug_field='title')
 
@@ -44,7 +53,11 @@ class PostCommentSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('title', 'body', 'profile', 'comments')
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
-    pass
+    class Meta:
+        model = Profile
+        fields = ('url', 'name')
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    pass
+    class Meta:
+        model = User
+        fields = ('url', 'pk', 'username', 'profiles')

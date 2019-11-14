@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 # Create your views here.
 import json
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
+from app.permissions import IsUserOrReadOnly
 from .serializers import *
 
 class AddressList(generics.ListCreateAPIView):
@@ -88,11 +89,26 @@ class ProfileCount(APIView):
             'total_comments': len(comments)
         })
 
+class UserList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    name = 'user-list'
+    permission_classes = (permissions.IsAuthenticated, IsUserOrReadOnly,)
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    name = 'user-detail'
+    permission_classes = (permissions.IsAuthenticated, IsUserOrReadOnly,)
+
 class ApiRoot(generics.GenericAPIView):
     name = 'api-root'
 
     def get(self, request, *args, **kwargs):
         return Response({
+            'users': reverse(UserList.name, request=request),
             'profiles': reverse(ProfileList.name, request=request),
             'address': reverse(AddressList.name, request=request),
             'posts': reverse(PostList.name, request=request),

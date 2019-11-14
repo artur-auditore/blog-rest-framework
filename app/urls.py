@@ -16,4 +16,6 @@ urlpatterns = [
     path('posts/<int:pk>/comments/<int:id>', CommentDetail.as_view(), name=CommentDetail.name),
     path('profile-count/', ProfilePostList.as_view(), name=ProfileCount.name),
     path('profile-count/<int:pk>/', ProfileCount.as_view(), name=ProfileCount.name),
+    path('users/', UserList.as_view(), name=UserList.name),
+    path('users/<int:pk>/', UserDetail.as_view(), name=UserDetail.name),
 ]

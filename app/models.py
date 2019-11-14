@@ -13,7 +13,7 @@ class Profile(models.Model):
     email = models.CharField(max_length=60)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="profile")
+    user = models.ForeignKey(User, related_name="profiles", on_delete=models.CASCADE)
 
     class Meta:
         ordering =('name',)
