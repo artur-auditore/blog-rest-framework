@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -11,6 +12,8 @@ class Profile(models.Model):
     name = models.CharField(max_length=60)
     email = models.CharField(max_length=60)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="profile")
 
     class Meta:
         ordering =('name',)
