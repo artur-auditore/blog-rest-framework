@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-from app.permissions import IsUserOrReadOnly
+from app.permissions import *
 from .serializers import *
 
 class AddressList(generics.ListCreateAPIView):
@@ -53,11 +53,13 @@ class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     name = 'post-list'
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     name = 'post-detail'
+    permission_classes = (IsUserOrReadOnly,)
 
 class CommentList(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
@@ -68,6 +70,7 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     name = 'comment-detail'
+    permission_classes = (IsOwnerOrReadOnly,)
 
 class ProfileCount(APIView):
     name = 'profile-count'
