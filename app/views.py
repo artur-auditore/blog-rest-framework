@@ -120,6 +120,7 @@ class ApiRoot(generics.GenericAPIView):
             'profile-count:': reverse(ProfileCount.name, request=request),
         })
 
+
 def import_data():
 
     data = json.load(open('db.json'))
@@ -132,7 +133,9 @@ def import_data():
 
         name = user['name']
         email = user['email']
-        Profile.objects.create(name=name, email=email, address=address)
+        user = User.objects.create(username=name, email=email, password='123456')
+        Profile.objects.create(name=name, email=email, address=address, user=user)
+
 
     for post in data['posts']:
         profile = Profile.objects.get(id=post['userId'])
