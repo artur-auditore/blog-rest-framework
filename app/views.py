@@ -62,15 +62,23 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsUserOrReadOnly,)
 
 class CommentList(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     name = 'comment-list'
 
+    def get_queryset(self):
+        post = self.kwargs['pk']
+        return Comment.objects.filter(post=post)
+
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Comment.objects.all()
+    #queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     name = 'comment-detail'
+    lookup_url_kwarg = 'id'
     permission_classes = (IsOwnerOrReadOnly,)
+
+    def get_queryset(self):
+        post = self.kwargs['pk']
+        return Comment.objects.filter(post=post)
 
 class ProfileCount(APIView):
     name = 'profile-count'
@@ -133,7 +141,7 @@ def import_data():
 
         name = user['name']
         email = user['email']
-        user = User.objects.create(username=name, email=email, password='123456')
+        user = User.objects.create(username=name, email=email, password="senha")
         Profile.objects.create(name=name, email=email, address=address, user=user)
 
 

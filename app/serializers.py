@@ -12,7 +12,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('name', 'email', 'address')
+        fields = ('name', 'email', 'address', 'user')
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
     post = serializers.SlugRelatedField(queryset=Post.objects.all(), slug_field='title')
@@ -27,7 +27,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('title', 'body', 'profile', 'comments')
+        fields = ('pk', 'title', 'body', 'profile', 'comments')
 
 class ProfilePostSerializer(serializers.HyperlinkedModelSerializer):
     posts = PostSerializer(many=True, read_only=True)
