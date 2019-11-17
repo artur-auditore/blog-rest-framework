@@ -1,5 +1,7 @@
 from django.urls import path
 from .views import *
+from rest_framework.authtoken.views import obtain_auth_token
+
 urlpatterns = [
     path('', ApiRoot.as_view(), name=ApiRoot.name),
     path('profile/', ProfileList.as_view(), name=ProfileList.name),
@@ -18,4 +20,6 @@ urlpatterns = [
     path('profile-count/<int:pk>/', ProfileCount.as_view(), name=ProfileCount.name),
     path('users/', UserList.as_view(), name=UserList.name),
     path('users/<int:pk>/', UserDetail.as_view(), name=UserDetail.name),
+    path('api-token-auth', obtain_auth_token),
+    path('api-token', CustomAuthToken.as_view(), name=CustomAuthToken.name),
 ]
